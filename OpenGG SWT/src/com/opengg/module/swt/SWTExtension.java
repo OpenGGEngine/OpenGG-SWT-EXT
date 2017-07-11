@@ -8,6 +8,7 @@ package com.opengg.module.swt;
 import com.opengg.core.extension.Extension;
 import com.opengg.core.render.window.WindowTypeRegister;
 import com.opengg.module.swt.window.GGCanvas;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 /**
@@ -16,11 +17,13 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class SWTExtension extends Extension{
     public Shell shell;
+    public Display display;
     
-    public SWTExtension(Shell shell){
+    public SWTExtension(Shell shell, Display display){
         extname = "SWT Window Support";
         requirement = LWJGL;
         this.shell = shell;
+        this.display = display;
     }
     
     @Override
@@ -28,4 +31,10 @@ public class SWTExtension extends Extension{
         WindowTypeRegister.registerWindowType("SWT", new GGCanvas(shell));
     }
     
+    @Override
+    public void update() {
+        if (!display.readAndDispatch()) {
+            display.sleep();
+        }
+    }
 }
