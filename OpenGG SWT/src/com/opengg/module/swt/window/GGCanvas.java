@@ -6,11 +6,11 @@
 
 package com.opengg.module.swt.window;
 
-import com.opengg.core.engine.EngineInfo;
 import com.opengg.core.exceptions.WindowCreationException;
 import com.opengg.core.io.input.keyboard.KeyboardController;
 import com.opengg.core.io.input.mouse.MouseController;
 import com.opengg.core.render.window.Window;
+import com.opengg.core.render.window.WindowInfo;
 import com.opengg.module.swt.input.SWTKeyboardHandler;
 import com.opengg.module.swt.input.SWTMouseButtonHandler;
 import com.opengg.module.swt.input.SWTMousePosHandler;
@@ -27,6 +27,7 @@ import static org.lwjgl.opengl.GL11.glGetError;
  * @author Javier
  */
 public class GGCanvas implements Window{
+    Shell shell;
     
     long id;
     GLCanvas canvas;
@@ -37,16 +38,25 @@ public class GGCanvas implements Window{
     SWTMouseButtonHandler mouseCallback;
     
     public GGCanvas(Shell shell){
+        this.shell = shell;
+    }
+    
+    @Override
+    public void setup(WindowInfo window){
         GLData data = new GLData();
         data.api = API.GL;
-        data.majorVersion = 3;
-        data.minorVersion = 2;
-        data.samples = 4;
+        data.majorVersion = 4;
+        data.minorVersion = 1;
+        data.samples = 1;
+        data.redSize = window.rbit;
+        data.blueSize = window.bbit;
+        data.greenSize = window.gbit;
         data.profile = Profile.CORE;
-        data.swapInterval = 1;
+        data.swapInterval = window.vsync ? 1 : 0;
         data.forwardCompatible = true;
-        canvas = new GLCanvas(shell, SWT.NO_BACKGROUND | SWT.NO_REDRAW_RESIZE, data);
+        canvas = new GLCanvas(shell, SWT.NO_BACKGROUND | (window.resizable ? SWT.RESIZE : SWT.NO_REDRAW_RESIZE), data);
         canvas.setCurrent();
+        canvas.setSize(window.width, window.height);
         id = canvas.context;
         GL.createCapabilities();
         
@@ -60,8 +70,6 @@ public class GGCanvas implements Window{
         
         if(glGetError() == GL_NO_ERROR){
             success = true;
-            EngineInfo.window = this;
-            EngineInfo.windowType = EngineInfo.SWT;
         }
         else
             throw new WindowCreationException("OpenGL initialization during window creation failed");
@@ -95,17 +103,31 @@ public class GGCanvas implements Window{
 
     @Override
     public int getWidth() {
-        return canvas.getSize().x;
+        return canvas.getBounds().width; 
     }
 
     @Override
     public int getHeight() {
-        return canvas.getSize().y;
+        return canvas.getBounds().height; 
     }
 
     @Override
     public boolean getSuccessfulConstruction() {
         return success;
     }
-    
+
+    @Override
+    public void setIcon(String path) throws Exception {
+        
+    }
+
+    @Override
+    public void setVSync(boolean vsync) {
+        
+    }
+
+    @Override
+    public String getType() {
+        return "SWT";
+    }
 }

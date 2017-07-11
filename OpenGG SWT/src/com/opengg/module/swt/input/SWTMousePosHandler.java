@@ -22,7 +22,6 @@ public class SWTMousePosHandler extends MousePosHandler implements MouseMoveList
     public void mouseMove(MouseEvent e) {
         x = e.x;
         y = e.y;
-        
     }
     
 }

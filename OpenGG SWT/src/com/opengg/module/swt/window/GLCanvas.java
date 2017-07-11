@@ -22,7 +22,7 @@ public class GLCanvas extends Canvas {
         String platformClassName;
         switch (Platform.get()) {
         case WINDOWS:
-            platformClassName = "org.lwjgl.opengl.swt.PlatformWin32GLCanvas";
+            platformClassName = "com.opengg.module.swt.window.PlatformWin32GLCanvas";
             break;
         default:
             throw new AssertionError("NYI");
