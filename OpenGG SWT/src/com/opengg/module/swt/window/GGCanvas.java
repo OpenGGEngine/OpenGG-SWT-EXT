@@ -76,6 +76,10 @@ public class GGCanvas implements Window{
 
     }
     
+    public GLCanvas getCanvas(){
+        return canvas;
+    }
+    
     @Override
     public void endFrame() {
         canvas.swapBuffers();
