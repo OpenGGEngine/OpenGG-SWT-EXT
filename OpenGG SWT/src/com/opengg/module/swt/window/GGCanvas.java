@@ -9,6 +9,7 @@ package com.opengg.module.swt.window;
 import com.opengg.core.exceptions.WindowCreationException;
 import com.opengg.core.io.input.keyboard.KeyboardController;
 import com.opengg.core.io.input.mouse.MouseController;
+import com.opengg.core.io.objloader.common.FastInt;
 import com.opengg.core.render.window.Window;
 import com.opengg.core.render.window.WindowInfo;
 import com.opengg.module.swt.input.SWTKeyboardHandler;
@@ -54,19 +55,22 @@ public class GGCanvas implements Window{
         data.profile = Profile.CORE;
         data.swapInterval = window.vsync ? 1 : 0;
         data.forwardCompatible = true;
-        canvas = new GLCanvas(shell, SWT.NO_BACKGROUND | (window.resizable ? SWT.RESIZE : SWT.NO_REDRAW_RESIZE), data);
+        shell.getDisplay().syncExec(() -> {
+            canvas = new GLCanvas(shell, SWT.NO_BACKGROUND | (window.resizable ? SWT.RESIZE : SWT.NO_REDRAW_RESIZE), data);
+            
+            canvas.setSize(window.width, window.height);
+            id = canvas.context;
+            
+            canvas.addKeyListener(keyCallback = new SWTKeyboardHandler());
+            canvas.addMouseMoveListener(mousePosCallback = new SWTMousePosHandler());
+            canvas.addMouseListener(mouseCallback = new SWTMouseButtonHandler());
+
+            KeyboardController.setHandler(keyCallback);
+            MouseController.setPosHandler(mousePosCallback);
+            MouseController.setButtonHandler(mouseCallback);
+        });
         canvas.setCurrent();
-        canvas.setSize(window.width, window.height);
-        id = canvas.context;
         GL.createCapabilities();
-        
-        shell.addKeyListener(keyCallback = new SWTKeyboardHandler());
-        shell.addMouseMoveListener(mousePosCallback = new SWTMousePosHandler());
-        shell.addMouseListener(mouseCallback = new SWTMouseButtonHandler());
-        
-        KeyboardController.setHandler(keyCallback);
-        MouseController.setPosHandler(mousePosCallback);
-        MouseController.setButtonHandler(mouseCallback);
         
         if(glGetError() == GL_NO_ERROR){
             success = true;
@@ -87,7 +91,7 @@ public class GGCanvas implements Window{
 
     @Override
     public float getRatio() {
-        return getWidth()/getHeight();
+        return (float)getWidth()/(float)getHeight();
     }
 
     @Override
@@ -97,7 +101,10 @@ public class GGCanvas implements Window{
 
     @Override
     public void destroy() {
-        canvas.dispose();
+        shell.getDisplay().syncExec(() -> {
+            canvas.dispose();
+        });
+        
     }
 
     @Override
@@ -107,12 +114,20 @@ public class GGCanvas implements Window{
 
     @Override
     public int getWidth() {
-        return canvas.getBounds().width; 
+        FastInt width = new FastInt();
+        shell.getDisplay().syncExec(() -> {
+            width.set(canvas.getBounds().width);
+        });
+        return width.get();
     }
 
     @Override
     public int getHeight() {
-        return canvas.getBounds().height; 
+        FastInt height = new FastInt();
+        shell.getDisplay().syncExec(() -> {
+            height.set(canvas.getBounds().height);
+        });
+        return height.get();
     }
 
     @Override

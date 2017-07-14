@@ -19,14 +19,19 @@ public class SWTKeyboardHandler extends KeyboardHandler implements KeyListener{
 
     @Override
     public void keyPressed(KeyEvent e) {
-        keys[e.keyCode] = true;
-        KeyboardController.keyPressed(e.keyCode);
+
+        if(e.keyCode < 65535 && keys[e.keyCode] != true){
+            KeyboardController.keyPressed(Character.toUpperCase(e.keyCode));
+        }
+        if(e.keyCode < 65535)
+            keys[e.keyCode] = true;
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        keys[e.keyCode] = false;
-        KeyboardController.keyReleased(e.keyCode);
+        if(e.keyCode < 65535)
+            keys[e.keyCode] = false;
+        KeyboardController.keyReleased(Character.toUpperCase(e.keyCode));
     }
     
 }

@@ -105,7 +105,7 @@ public class GLCanvas extends Canvas {
      * </ul>
      */
     public void setCurrent() {
-        checkWidget();
+        //checkWidget();
         if (platformCanvas.isCurrent(context))
             return;
         platformCanvas.makeCurrent(this, context);
@@ -120,7 +120,7 @@ public class GLCanvas extends Canvas {
      * </ul>
      */
     public void swapBuffers() {
-        checkWidget();
+        //checkWidget();
         platformCanvas.swapBuffers(this);
     }
 

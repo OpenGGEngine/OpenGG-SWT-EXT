@@ -33,8 +33,6 @@ public class SWTExtension extends Extension{
     
     @Override
     public void update() {
-        if (!display.readAndDispatch()) {
-            display.sleep();
-        }
+        
     }
 }
