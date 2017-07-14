@@ -96,14 +96,11 @@ public class GGCanvas implements Window{
 
     @Override
     public boolean shouldClose() {
-        return canvas.isDisposed();
+        return shell.isDisposed();
     }
 
     @Override
     public void destroy() {
-        shell.getDisplay().syncExec(() -> {
-            canvas.dispose();
-        });
         
     }
 
