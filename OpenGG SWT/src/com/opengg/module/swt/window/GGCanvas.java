@@ -9,7 +9,7 @@ package com.opengg.module.swt.window;
 import com.opengg.core.exceptions.WindowCreationException;
 import com.opengg.core.io.input.keyboard.KeyboardController;
 import com.opengg.core.io.input.mouse.MouseController;
-import com.opengg.core.io.objloader.common.FastInt;
+import com.opengg.core.math.FastInt;
 import com.opengg.core.render.window.Window;
 import com.opengg.core.render.window.WindowInfo;
 import com.opengg.module.swt.input.SWTKeyboardHandler;
