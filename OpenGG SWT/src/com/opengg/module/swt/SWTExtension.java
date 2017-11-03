@@ -32,7 +32,7 @@ public class SWTExtension extends Extension{
     }
     
     @Override
-    public void update() {
+    public void update(float delta) {
         
     }
 }
